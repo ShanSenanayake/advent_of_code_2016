@@ -6,6 +6,7 @@
 
 
 (defn day-0 [args] (apply (resolve 'Day0/-main) args))
+(defn day-1 [args] (apply (resolve 'Day1/-main) args))
 
 (deftask dev
   "Setting dev for atom console to run REPL"
@@ -16,4 +17,6 @@
   "Running a main entry point to start all the other minor apps"
   [a args ARG [str] "the arguments for the application."]
   (require 'Day0)
-  (day-0 args))
+  (require 'Day1)
+  (day-0 args)
+  (day-1 args))

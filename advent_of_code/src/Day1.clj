@@ -24,6 +24,10 @@
   "Denotes the current path taken"
   [direction-list [0 0]])
 
+(def start-path-2
+  "Denotes the current path taken"
+  [direction-list [[0 0] #{[0 0]}]])
+
 (defn turn-right [list]
   (concat
     (rest list)
@@ -37,6 +41,34 @@
 (defn decide-direction [rel-direction direction-list]
   ((get {:L turn-left :R turn-right} rel-direction) direction-list))
 
+(defn check-path-history [direction position-list distance]
+  (let [
+    current-position (direction (first position-list) distance)]
+    (if (contains? (last position-list) current-position)
+    (reduced current-position)
+    [current-position (conj (last position-list) current-position)])))
+
+(defn check-history [direction position-list distance]
+  (let [
+    func (partial check-path-history (first direction))]
+    (reduce func position-list (take distance (cycle [1])))))
+
+(defn take-turn-2 [path pair]
+  (let [
+    current-direction
+    (decide-direction
+      (first pair)
+      (first path))
+    current-pos
+    (check-history
+      current-direction
+      (last path)
+      (last pair))]
+    (if
+      (instance? java.lang.Long (first current-pos))
+      (reduced current-pos)
+      [current-direction current-pos])))
+
 (defn take-turn [path pair]
   (let [current-direction
     (decide-direction
@@ -45,8 +77,8 @@
     [current-direction
      ((first current-direction) (last path) (last pair))]))
 
-(defn get-final-pos [start-path command-list]
-  (reduce take-turn start-path command-list))
+(defn get-final-pos [func start-path command-list]
+  (reduce func start-path command-list))
 
 (defn find-shortest-distance [finish]
   (reduce + (map abs finish)))
@@ -61,10 +93,18 @@
 (defn parse-input [input]
   (map string-to-list (clojure.string/split input #", ")))
 
+(def final-pos (partial get-final-pos take-turn))
+
+(def first-revisted (partial get-final-pos take-turn-2))
+
 (defn -main
   "First task of advent of code"
   [& args]
   (println "Day 1. No time for a Taxicab")
   (printf "## Answer: distance is %d\n" (find-shortest-distance
     (last
-      (get-final-pos start-path (parse-input input))))))
+      (final-pos start-path (parse-input input)))))
+  (println "Day 1. Part 2")
+  (printf "## Answer: first revisted distance is %d\n"
+  (find-shortest-distance
+    (first-revisted start-path-2 (parse-input input)))))

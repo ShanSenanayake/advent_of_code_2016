@@ -7,6 +7,8 @@
 
 (defn day-0 [args] (apply (resolve 'Day0/-main) args))
 (defn day-1 [args] (apply (resolve 'Day1/-main) args))
+(defn day-2 [args] (apply (resolve 'Day2/-main) args))
+
 
 (deftask dev
   "Setting dev for atom console to run REPL"
@@ -18,5 +20,7 @@
   [a args ARG [str] "the arguments for the application."]
   (require 'Day0)
   (require 'Day1)
+  (require 'Day2)
   (day-0 args)
-  (day-1 args))
+  (day-1 args)
+  (day-2 args))

@@ -53,29 +53,18 @@
     func (partial check-path-history (first direction))]
     (reduce func position-list (take distance (cycle [1])))))
 
-(defn take-turn-2 [path pair]
+(defn take-turn-2 [[direction-list path] [command distance]]
   (let [
-    current-direction
-    (decide-direction
-      (first pair)
-      (first path))
-    current-pos
-    (check-history
-      current-direction
-      (last path)
-      (last pair))]
+    current-direction (decide-direction command direction-list)
+    current-pos (check-history current-direction path distance)]
     (if
       (instance? java.lang.Long (first current-pos))
       (reduced current-pos)
       [current-direction current-pos])))
 
-(defn take-turn [path pair]
-  (let [current-direction
-    (decide-direction
-      (first pair)
-      (first path))]
-    [current-direction
-     ((first current-direction) (last path) (last pair))]))
+(defn take-turn [[direction-list current-pos] [command distance]]
+  (let [current-direction (decide-direction command direction-list)]
+    [current-direction ((first current-direction) current-pos distance)]))
 
 (defn get-final-pos [func start-path command-list]
   (reduce func start-path command-list))

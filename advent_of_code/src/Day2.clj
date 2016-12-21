@@ -16,8 +16,12 @@ UUUUD")
     ["4" "5" "6"]
     ["7" "8" "9"]])
 
-(defn go-down [index]
-  (max index (mod (+ index 1) 3)))
+(def part-2
+  [ [nil nil "1" nil nil]
+    [nil "2" "3" "4" nil]
+    ["5" "6" "7" "8" "9"]
+    [nil "A" "B" "C" nil]
+    [nil nil "D" nil nil]])
 
 (defn calc-new-pos [[x y] command]
   (get
@@ -60,3 +64,6 @@ UUUUD")
   (println "Day 2. Bathroom Security")
   (printf "##Answer: Bathroom code is %s\n"
   (apply str (find-code [part-1 [1 1]] (parse-input input))))
+  (println "Part 2.")
+  (printf "##Answer: Bathroom code is %s\n"
+  (apply str (find-code [part-2 [0 2]] (parse-input input)))))

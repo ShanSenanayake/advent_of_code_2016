@@ -8,6 +8,7 @@
 (defn day-0 [args] (apply (resolve 'Day0/-main) args))
 (defn day-1 [args] (apply (resolve 'Day1/-main) args))
 (defn day-2 [args] (apply (resolve 'Day2/-main) args))
+(defn day-3 [args] (apply (resolve 'Day3/-main) args))
 
 
 (deftask dev
@@ -21,6 +22,8 @@
   (require 'Day0)
   (require 'Day1)
   (require 'Day2)
+  (require 'Day3)
   (day-0 args)
   (day-1 args)
-  (day-2 args))
+  (day-2 args)
+  (day-3 args))

@@ -11,30 +11,38 @@ RRDDD
 LURDL
 UUUUD")
 
-(defn go-up [index]
-  (min index (mod (- index 1) 3)))
+(def part-1
+  [ ["1" "2" "3"]
+    ["4" "5" "6"]
+    ["7" "8" "9"]])
 
 (defn go-down [index]
   (max index (mod (+ index 1) 3)))
 
-(defn make-move [point command]
+(defn calc-new-pos [[x y] command]
   (get
     {
-      :U [(first point) (go-up (last point))]
-      :L [(go-up (first point)) (last point)]
-      :R [(go-down (first point)) (last point)]
-      :D [(first point) (go-down (last point))]
+      :U [x (- y 1)]
+      :L [(- x 1) y]
+      :R [(+ x 1) y]
+      :D [x (+ y 1)]
     }
     command))
 
-(defn decide-number [start-point commands]
-  (reduce make-move start-point commands))
+(defn value-or-default
+  [matrix [x y]] (nth (nth matrix y []) x nil))
 
-(defn convert-to-number [pair]
-  (+ (* (last pair) 3) (+ (first pair) 1)))
+(defn get-correct-pos [matrix current next]
+  (if (nil? (value-or-default matrix next)) current next))
+
+(defn move [[matrix pos] command]
+  [matrix (get-correct-pos matrix pos (calc-new-pos pos command))])
+
+(defn decide-number [start-point commands]
+  (reduce move start-point commands))
 
 (defn find-code [start-point commands]
-  (map convert-to-number (rest (reductions decide-number start-point commands))))
+  (map (partial value-or-default (first start-point)) (map last (rest (reductions decide-number start-point commands)))))
 
 (defn char-to-keyword [char]
   (keyword (str char)))
@@ -51,4 +59,4 @@ UUUUD")
   [& args]
   (println "Day 2. Bathroom Security")
   (printf "##Answer: Bathroom code is %s\n"
-  (apply str (find-code [1 1] (parse-input input)))))
+  (apply str (find-code [part-1 [1 1]] (parse-input input))))
